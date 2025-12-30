@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://dairy-management-frontend-production.up.railway.app',
+  'https://dairy-management-lorraine-production.up.railway.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
