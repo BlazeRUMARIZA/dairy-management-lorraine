@@ -1,5 +1,5 @@
 {
-  "name": "dairy-management-system",
+  "name": "dairy-management-lorraine",
   "version": "1.0.0",
   "description": "Comprehensive dairy business management system",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx"
   },
-  "keywords": ["dairy", "management", "system"],
+  "keywords": ["dairy", "management", "lorraine"],
   "author": "",
   "license": "MIT",
   "devDependencies": {

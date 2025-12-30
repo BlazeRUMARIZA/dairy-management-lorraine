@@ -138,27 +138,27 @@ const Dashboard: React.FC = () => {
           value={stats.todayProduction !== undefined ? `${stats.todayProduction.toLocaleString()} L` : '0 L'}
           trend={stats.productionTrend}
           icon={<Milk size={24} />}
-          color="blue"
+          color="primary"
         />
         <StatCard
           title="Pending Orders"
           value={stats.pendingOrders !== undefined ? stats.pendingOrders.toString() : '0'}
           trend={stats.ordersTrend}
           icon={<Truck size={24} />}
-          color="green"
+          color="success"
         />
         <StatCard
           title="Critical Stock Alerts"
           value={stats.criticalStock !== undefined ? stats.criticalStock.toString() : '0'}
           icon={<AlertTriangle size={24} />}
-          color="red"
+          color="danger"
         />
         <StatCard
           title="Monthly Revenue"
           value={stats.monthlyRevenue !== undefined ? `$${stats.monthlyRevenue.toLocaleString()}` : '$0'}
           trend={stats.revenueTrend}
           icon={<DollarSign size={24} />}
-          color="green"
+          color="success"
         />
       </div>
 
