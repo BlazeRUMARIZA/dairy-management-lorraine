@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "cd backend && npm ci && npm run build",
+    "start": "cd backend && npm start",
+    "frontend:dev": "vite",
+    "frontend:build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx"
   },
