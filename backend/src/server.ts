@@ -112,7 +112,7 @@ app.get('/', (_req, res) => {
 
 // Import routes
 import authRoutes from './routes/authRoutes';
-import userRoutes from './routes/userRoutes';
+import userRoutes from './routes/userRoutes'; // User management CRUD routes - deployed 2026-01-02
 import productRoutes from './routes/productRoutes';
 import clientRoutes from './routes/clientRoutes';
 import orderRoutes from './routes/orderRoutes';

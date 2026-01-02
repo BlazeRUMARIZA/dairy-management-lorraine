@@ -100,7 +100,7 @@ app.get('/', (_req, res) => {
 });
 // Import routes
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
-const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes")); // User management CRUD routes - deployed 2026-01-02
 const productRoutes_1 = __importDefault(require("./routes/productRoutes"));
 const clientRoutes_1 = __importDefault(require("./routes/clientRoutes"));
 const orderRoutes_1 = __importDefault(require("./routes/orderRoutes"));
