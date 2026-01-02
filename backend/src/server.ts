@@ -112,6 +112,7 @@ app.get('/', (_req, res) => {
 
 // Import routes
 import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
 import productRoutes from './routes/productRoutes';
 import clientRoutes from './routes/clientRoutes';
 import orderRoutes from './routes/orderRoutes';
@@ -122,6 +123,7 @@ import dashboardRoutes from './routes/dashboardRoutes';
 // Mount routes
 const apiVersion = process.env.API_VERSION || 'v1';
 app.use(`/api/${apiVersion}/auth`, authRoutes);
+app.use(`/api/${apiVersion}/users`, userRoutes);
 app.use(`/api/${apiVersion}/products`, productRoutes);
 app.use(`/api/${apiVersion}/clients`, clientRoutes);
 app.use(`/api/${apiVersion}/orders`, orderRoutes);
