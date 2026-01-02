@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getUsers,
   getUser,
+  createUser,
   updateUser,
   deleteUser,
   updateUserStatus,
@@ -10,17 +11,19 @@ import { protect, authorize } from '../middleware/auth';
 
 const router = express.Router();
 
-// All routes are protected and require admin role
-router
-  .route('/')
-  .get(protect, authorize('admin'), getUsers);
+// All routes require authentication and admin role
+router.use(protect);
+router.use(authorize('admin'));
 
-router
-  .route('/:id')
-  .get(protect, authorize('admin'), getUser)
-  .put(protect, authorize('admin'), updateUser)
-  .delete(protect, authorize('admin'), deleteUser);
+router.route('/')
+  .get(getUsers)
+  .post(createUser);
 
-router.patch('/:id/status', protect, authorize('admin'), updateUserStatus);
+router.route('/:id')
+  .get(getUser)
+  .put(updateUser)
+  .delete(deleteUser);
+
+router.patch('/:id/status', updateUserStatus);
 
 export default router;

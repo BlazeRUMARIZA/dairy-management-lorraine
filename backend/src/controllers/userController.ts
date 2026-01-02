@@ -5,7 +5,7 @@ import { AuthRequest } from '../middleware/auth';
 // @desc    Get all users
 // @route   GET /api/v1/users
 // @access  Private (Admin only)
-export const getUsers = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getUsers = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const users = await User.findAll({
       attributes: { exclude: ['password', 'resetPasswordToken', 'resetPasswordExpire'] },
@@ -54,6 +54,50 @@ export const getUser = async (req: AuthRequest, res: Response): Promise<void> =>
   }
 };
 
+// @desc    Create user
+// @route   POST /api/v1/users
+// @access  Private (Admin only)
+export const createUser = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { name, email, password, role, phone, status } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
+      res.status(400).json({
+        success: false,
+        message: 'User with this email already exists',
+      });
+      return;
+    }
+
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role: role || 'viewer',
+      phone,
+      status: status || 'active',
+    });
+
+    // Remove password from response
+    const userResponse = user.toJSON();
+    delete (userResponse as any).password;
+
+    res.status(201).json({
+      success: true,
+      data: userResponse,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error',
+    });
+  }
+};
+
 // @desc    Update user
 // @route   PUT /api/v1/users/:id
 // @access  Private (Admin only)
@@ -72,28 +116,18 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
     // Don't allow updating password through this endpoint
     const { password, resetPasswordToken, resetPasswordExpire, ...updateData } = req.body;
 
-    // Check if email is being changed and if it's already taken
-    if (updateData.email && updateData.email !== user.email) {
-      const emailExists = await User.findOne({ where: { email: updateData.email } });
-      if (emailExists) {
-        res.status(400).json({
-          success: false,
-          message: 'Email already exists',
-        });
-        return;
-      }
-    }
-
+    // Update user
     await user.update(updateData);
 
-    // Return user without password
-    const updatedUser = await User.findByPk(user.id, {
-      attributes: { exclude: ['password', 'resetPasswordToken', 'resetPasswordExpire'] },
-    });
+    // Remove sensitive data from response
+    const userResponse = user.toJSON();
+    delete (userResponse as any).password;
+    delete (userResponse as any).resetPasswordToken;
+    delete (userResponse as any).resetPasswordExpire;
 
     res.status(200).json({
       success: true,
-      data: updatedUser,
+      data: userResponse,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -118,8 +152,8 @@ export const deleteUser = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    // Prevent deleting yourself
-    if (req.user && user.id === req.user.id) {
+    // Don't allow deleting yourself
+    if (user.id === req.user?.id) {
       res.status(400).json({
         success: false,
         message: 'You cannot delete your own account',
@@ -141,17 +175,17 @@ export const deleteUser = async (req: AuthRequest, res: Response): Promise<void>
   }
 };
 
-// @desc    Update user status (activate/deactivate)
+// @desc    Update user status
 // @route   PATCH /api/v1/users/:id/status
 // @access  Private (Admin only)
 export const updateUserStatus = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { status } = req.body;
-    
-    if (!status || !['active', 'inactive'].includes(status)) {
+
+    if (!['active', 'inactive', 'suspended'].includes(status)) {
       res.status(400).json({
         success: false,
-        message: 'Valid status is required (active or inactive)',
+        message: 'Invalid status value',
       });
       return;
     }
@@ -166,26 +200,20 @@ export const updateUserStatus = async (req: AuthRequest, res: Response): Promise
       return;
     }
 
-    // Prevent deactivating yourself
-    if (req.user && user.id === req.user.id) {
+    // Don't allow changing your own status
+    if (user.id === req.user?.id) {
       res.status(400).json({
         success: false,
-        message: 'You cannot deactivate your own account',
+        message: 'You cannot change your own account status',
       });
       return;
     }
 
-    user.status = status;
-    await user.save();
-
-    // Return user without password
-    const updatedUser = await User.findByPk(user.id, {
-      attributes: { exclude: ['password', 'resetPasswordToken', 'resetPasswordExpire'] },
-    });
+    await user.update({ status });
 
     res.status(200).json({
       success: true,
-      data: updatedUser,
+      data: user,
     });
   } catch (error: any) {
     res.status(500).json({
