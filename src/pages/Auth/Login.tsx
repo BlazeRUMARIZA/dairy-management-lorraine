@@ -114,7 +114,7 @@ const Login: React.FC = () => {
               <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Test Credentials</p>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
                 <span className="text-sm font-mono text-neutral-700 dark:text-neutral-300">
-                  admin@dairy.com / admin123
+                  lorraine@dairysystem.com / admin123
                 </span>
               </div>
             </div>
